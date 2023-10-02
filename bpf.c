@@ -37,7 +37,7 @@ static inline int restrict_network_interfaces_impl(const struct __sk_buff *sk) {
         if (is_allow_list) {
                 /* allow-list: let the packet pass if iface in the list */
                 if (lookup_result)
-                    return PASS;
+                        return PASS;
         } else {
                 /* deny-list: let the packet pass if iface *not* in the list */
                 if (!lookup_result)
