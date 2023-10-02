@@ -7,19 +7,19 @@ generate:
 		apt-get install -y clang llvm libbpf-dev && \
 		rm -rf /var/lib/apt/lists/*
 
-    RUN ln -s /usr/include/*/asm /usr/include/asm
+	RUN ln -s /usr/include/*/asm /usr/include/asm
 
 	COPY . .
 	RUN --mount=type=cache,target=/root/.cache/go-build \
-        --mount=type=cache,target=/go/pkg/mod \
-	    go generate main.go
+		--mount=type=cache,target=/go/pkg/mod \
+		go generate main.go
 
 	SAVE ARTIFACT ./bpf_* AS LOCAL .
 
 build:
-    COPY . .
+	COPY . .
 	RUN --mount=type=cache,target=/root/.cache/go-build \
-        --mount=type=cache,target=/go/pkg/mod \
-	    go build
+		--mount=type=cache,target=/go/pkg/mod \
+		go build
 
 	SAVE ARTIFACT ./tsblock AS LOCAL .
