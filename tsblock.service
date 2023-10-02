@@ -1,0 +1,9 @@
+[Unit]
+Description = tsblock
+Requires = tailscaled.service
+
+[Service]
+ExecStart = /usr/local/sbin/tsblock
+
+[Install]
+WantedBy = multi-user.target
