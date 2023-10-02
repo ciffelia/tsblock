@@ -21,10 +21,6 @@ func tailscaleCgroup() (string, error) {
 		return "", fmt.Errorf("detecting tailscaled cgroup: %w", err)
 	}
 
-	if path == "" {
-		return "", errors.New("cgroup for tailscaled.service not found")
-	}
-
 	return mp + path, nil
 }
 
@@ -61,5 +57,10 @@ func cgroupByService(serviceName string) (string, error) {
 		return "", fmt.Errorf("unexpected output format: %s", output)
 	}
 
-	return strings.TrimSpace(parts[1]), nil
+	c := strings.TrimSpace(parts[1])
+	if c == "" {
+		return "", fmt.Errorf("cgroup for service %s not found", serviceName)
+	}
+
+	return c, nil
 }
