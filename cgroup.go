@@ -2,8 +2,7 @@ package main
 
 import (
 	"bufio"
-	"errors"
-	"fmt"
+	"github.com/cockroachdb/errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -13,12 +12,12 @@ import (
 func tailscaleCgroup() (string, error) {
 	mp, err := cgroupMountPoint()
 	if err != nil {
-		return "", fmt.Errorf("detecting cgroup mountpoint: %w", err)
+		return "", errors.Wrap(err, "detect cgroup mount point")
 	}
 
 	path, err := cgroupByService("tailscaled.service")
 	if err != nil {
-		return "", fmt.Errorf("detecting tailscaled cgroup: %w", err)
+		return "", errors.Wrap(err, "detect cgroup for tailscaled.service")
 	}
 
 	return mp + path, nil
@@ -28,7 +27,7 @@ func tailscaleCgroup() (string, error) {
 func cgroupMountPoint() (string, error) {
 	f, err := os.Open("/proc/mounts")
 	if err != nil {
-		return "", fmt.Errorf("failed to open /proc/mounts: %w", err)
+		return "", errors.Wrap(err, "open /proc/mounts")
 	}
 	defer f.Close()
 
@@ -48,18 +47,18 @@ func cgroupMountPoint() (string, error) {
 func cgroupByService(serviceName string) (string, error) {
 	out, err := exec.Command("systemctl", "show", "--property", "ControlGroup", serviceName).Output()
 	if err != nil {
-		return "", fmt.Errorf("failed to execute systemctl: %w", err)
+		return "", errors.Wrap(err, "run `systemctl show`")
 	}
 
 	output := string(out)
 	parts := strings.Split(output, "=")
 	if len(parts) != 2 {
-		return "", fmt.Errorf("unexpected output format: %s", output)
+		return "", errors.Newf("unexpected output format: %s", output)
 	}
 
 	c := strings.TrimSpace(parts[1])
 	if c == "" {
-		return "", fmt.Errorf("cgroup for service %s not found", serviceName)
+		return "", errors.New("cgroup not found")
 	}
 
 	return c, nil
