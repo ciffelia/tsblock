@@ -11,6 +11,8 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 
+#define MAX_IFACE_ENTRIES 4096
+
 const volatile __u8 is_allow_list = 0;
 
 /* Map containing the network interfaces indexes.
@@ -20,7 +22,7 @@ struct {
         __uint(type, BPF_MAP_TYPE_HASH);
         __type(key, __u32);
         __type(value, __u8);
-        __uint(max_entries, 4096);
+        __uint(max_entries, MAX_IFACE_ENTRIES);
 } ifaces_map SEC(".maps");
 
 #define DROP 0
