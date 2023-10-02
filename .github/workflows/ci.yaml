@@ -11,6 +11,7 @@ permissions:
 
 env:
   earthly_version: ^0.7.19
+  golangci_lint_version: v1.54
 
 jobs:
   go-mod:
@@ -69,3 +70,18 @@ jobs:
         with:
           name: ${{ matrix.go-env.name }}
           path: out/**/*
+
+  golangci-lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: ${{ env.golangci_lint_version }}
