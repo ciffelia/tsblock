@@ -5,7 +5,7 @@
 
 tsblock prevents Tailscale from using specific network interfaces.
 
-tsblock is developed to work around [tailscale/tailscale#7594](https://github.com/tailscale/tailscale/issues/7594). Currently, interfaces whose name matches `^vxlan\.calico$|^cali` are blocked.
+tsblock is developed to work around [tailscale/tailscale#7594](https://github.com/tailscale/tailscale/issues/7594). Currently, interfaces whose name matches `^vxlan\.calico$|^cali` are blocked. The pattern is hard-coded in [main.go](main.go).
 
 ## Requirements
 
