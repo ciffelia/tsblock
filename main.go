@@ -13,7 +13,7 @@ import (
 
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go bpf bpf.c
 
-var blockedIfacesName = regexp.MustCompile(`^vxlan\.calico$|^cali`)
+var blockedIfacesName = regexp.MustCompile(`^cilium_|^lxc`)
 
 func main() {
 	// Allow the current process to lock memory for eBPF resources.
