@@ -33,6 +33,26 @@ jobs:
       - name: Check go.mod and go.sum
         run: git diff --exit-code -- go.mod go.sum
 
+  go-fmt:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - run: go fmt ./...
+
+      - name: Check diff
+        run: git diff --exit-code
+
   go-generate:
     runs-on: ubuntu-24.04
     permissions:
