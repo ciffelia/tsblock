@@ -32,7 +32,7 @@ func main() {
 	if err := loadBpfObjects(&objs, nil); err != nil {
 		panic(errors.Wrap(err, "load eBPF objects"))
 	}
-	defer objs.Close()
+	defer func() { _ = objs.Close() }()
 	log.Println("loaded eBPF programs and maps into the kernel")
 
 	// Link eBPF programs to the cgroup.
@@ -44,7 +44,7 @@ func main() {
 	if err != nil {
 		panic(errors.Wrap(err, "link restrict_network_interfaces_egress to the cgroup"))
 	}
-	defer lEgress.Close()
+	defer func() { _ = lEgress.Close() }()
 
 	lIngress, err := link.AttachCgroup(link.CgroupOptions{
 		Path:    tsCgroupPath,
@@ -54,7 +54,7 @@ func main() {
 	if err != nil {
 		panic(errors.Wrap(err, "link restrict_network_interfaces_ingress to the cgroup"))
 	}
-	defer lIngress.Close()
+	defer func() { _ = lIngress.Close() }()
 
 	log.Println("attached eBPF programs to the cgroup")
 
