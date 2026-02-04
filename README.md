@@ -18,8 +18,8 @@ tsblock utilizes eBPF to drop packets sent from `tailscaled.service` systemd uni
 
 ## Install
 
-```
-go build
+```sh
+go build  # or download binary from https://github.com/ciffelia/tsblock/releases
 sudo ./systemd/install.sh
 sudo systemctl daemon-reload
 sudo systemctl enable --now tsblock.service
@@ -27,7 +27,7 @@ sudo systemctl enable --now tsblock.service
 
 ## Uninstall
 
-```
+```sh
 sudo systemctl disable --now tsblock.service
 sudo ./systemd/uninstall.sh
 ```
