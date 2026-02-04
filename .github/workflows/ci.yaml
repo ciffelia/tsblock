@@ -9,7 +9,7 @@ on:
 permissions: {}
 
 env:
-  earthly_version: ^0.7.19
+  earthly_version: 0.8.16
   golangci_lint_version: v2.8.0
 
 jobs:
