@@ -80,10 +80,35 @@ jobs:
       - name: Build
         run: CGO_ENABLED=0 ${{ matrix.go-env.env }} go build -o out/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.go-env.name }}
           path: out/**/*
+
+  create-release:
+    if: github.ref == 'refs/heads/main'
+    needs: go-build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          path: build
+
+      - name: Create GitHub Release
+        run: |
+          set -u
+          version=$(date +'%Y.%m.%d.%H.%M.%S')
+          mkdir release
+          for arch_dir in build/*; do
+            arch=$(basename "$arch_dir")
+            tar -czf "release/tsblock_${version}_${arch}.tar.gz" -C "$arch_dir" .
+          done
+          gh release create --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease "$version" release/*
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   golangci-lint:
     runs-on: ubuntu-24.04
